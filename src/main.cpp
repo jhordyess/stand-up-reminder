@@ -14,12 +14,15 @@ const int ECHO_PIN = 6;
 const int MaxDistance = 200;
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MaxDistance);
 /* Aux vars */
-DateTime saveDateTime;
-int currDistance = 200;
-bool lock = false;
+bool chronometer = false;
+DateTime chronometerDateTime;
+bool waitReset = false;
+DateTime waitResetDateTime;
+int currentDistance = 200;
 /* Config vars */
 const int maxSecs = 30 * 60;
-const int distance = 100;
+const int minDistance = 50;
+const int toleranceSecs = 10;
 MySerial serial(true);
 
 void setup() {
@@ -27,6 +30,7 @@ void setup() {
   MFS.initialize(&Timer1);
   serial.begin(9600);
   if (!rtc.begin()) {
+    MFS.write("RTC");
     serial.println("Couldn't find RTC!");
     serial.flush();
     while (1)
@@ -35,34 +39,48 @@ void setup() {
 }
 
 void loop() {
-  const int currDist = sonar.ping_cm();
-  if (currDist != 0 && currDist != currDistance)
-    currDistance = currDist;
+  const int distanceMeasured = sonar.ping_cm();
+  if (distanceMeasured != 0 && distanceMeasured != currentDistance)
+    currentDistance = distanceMeasured;
+  serial.print1("Distance[cm]", currentDistance);
 
-  if (!lock && (currDistance > 0 || currDistance < distance)) {
-    lock = true;
-    saveDateTime = rtc.now();
+  if (!chronometer && (currentDistance > 0 || currentDistance < minDistance)) {
+    chronometer = true;
+    waitReset = false;
+    chronometerDateTime = rtc.now();
   }
-  if (lock && currDistance >= distance) {
-    lock = false;
-  }
+  if (currentDistance >= minDistance) {
+    if (!waitReset) {
+      waitReset = true;
+      waitResetDateTime = rtc.now();
+    }
 
-  serial.print1("distanceCM", currDistance);
-  serial.print("lock", lock);
-
-  if (lock) {
     DateTime now = rtc.now();
-    const int secs = now.unixtime() - saveDateTime.unixtime();
-    serial.print("secs", secs);
+    const int secs = now.unixtime() - waitResetDateTime.unixtime();
+    serial.print("Remain[s]", toleranceSecs - secs);
+
+    if (chronometer && waitReset && secs >= toleranceSecs) {
+      chronometer = false;
+      waitReset = false;
+    }
+  } else if (waitReset) {
+    waitReset = false;
+  }
+
+  if (chronometer) {
+    DateTime now = rtc.now();
+    const int secs = now.unixtime() - chronometerDateTime.unixtime();
+    serial.print("Siting[s]", secs);
+    MFS.write(secs);
     // const int mm = secs / 60;
     // const int ss = secs % 60;
-    MFS.write(secs);
     if (secs >= maxSecs) {
-      serial.print("beep");
+      serial.print("Stand up!");
       MFS.beep(5, 5, 4, 3, 50);
     }
   } else
     MFS.write("");
+
   serial.println();
   delay(100);
 }
