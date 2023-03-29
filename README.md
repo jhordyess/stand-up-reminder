@@ -4,13 +4,13 @@ Stand up reminder is a device to prevent sedentary behavior. This project is wri
 
 ## How it works
 
-The device uses an ultrasonic sensor to detect if a person is sitting on a chair and, if they are, starts a timer to measure how long they remain seated(30 min). If the person sits for too long, the device emits a sound to remind them to stand up and move around. Additionally, the device includes a button to silence the sound and provides visual feedback through a multifunction shield.
+The device uses an ultrasonic sensor to detect if a person is sitting on a chair and, if they are, starts a timer to measure how long they remain seated(30 min). If the person sits for too long, the device emits a sound to remind them to stand up and move around. Additionally, the device provides visual feedback through a multifunction shield.
 
 ## Requirements
 
 ### Hardware
 
-To build this device, the following items are required
+To build this device, the following items are required:
 
 - Arduino microcontroller (Arduino UNO R3 was used)
 - Arduino Multifunction Shield (for Arduino Uno R3)
@@ -19,7 +19,7 @@ To build this device, the following items are required
 
 ### Software
 
-This project requires the following software libraries to run:
+This project requires the following libraries to run:
 
 - [Multi Function Shield Library by Hpsaturn](https://registry.platformio.org/libraries/hpsaturn/MultiFuncShield)
 - [NewPing by Tim Eckel](https://registry.platformio.org/libraries/teckel12/NewPing)
@@ -33,9 +33,16 @@ This project requires the following software libraries to run:
 
 ## To-Do
 
+- Add reset button feature.
 - Add wiring diagram.
 - Add installation steps.
 - Add more to-do's.
+
+## Inspiration link 🤔
+
+Don't worry, it's not spam, just know that it is necessary to pay attention to the sedentary work of the programmer.
+
+- <https://www.popsci.com/health/exercise-sitting-work>
 
 ## License
 
