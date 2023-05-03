@@ -46,7 +46,7 @@ Don't worry, it's not spam, just know that it is necessary to pay attention to t
 
 ## License
 
-© 2022> [Jhordyess](https://github.com/jhordyess). Under the [MIT](https://choosealicense.com/licenses/mit/) license.
+© 2022 [Jhordyess](https://github.com/jhordyess). Under the [MIT](https://choosealicense.com/licenses/mit/) license.
 
 ---
 
